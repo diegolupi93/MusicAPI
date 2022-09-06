@@ -1,4 +1,3 @@
-from re import A
 from flask import Flask, request, jsonify, make_response
 import urllib.request, json
 from flask_caching import Cache 
