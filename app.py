@@ -1,11 +1,13 @@
-from urllib import response
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import urllib.request, json
 from flask_caching import Cache 
 from constants import ARTIST_DESCRIPTION, ARTIST_DISCOGRAPHY, FIELDS, ALBUM_FIELDS
 
 app = Flask(__name__)
-app.config.from_object('config.Config')  # Set the configuration variables to the flask application
+try:
+    app.config.from_object('config.Config')  # Set the configuration variables to the flask application
+except:
+    pass # To Run the test
 cache = Cache(app)  # Initialize Cache
 
 def parse_info(description, discography, fields, album_fields):
@@ -59,17 +61,17 @@ def get_artist_info(artist, artist_description, artist_discography, fields, albu
     artist_description = artist_description.format(artist)
 
     artist_discography = artist_discography.format(artist)
-
     descrip = urllib.request.urlopen(artist_description)
     descrip = descrip.read()
     description = json.loads(descrip)['artists']
 
-    if description is None:
-        raise ValueError
-
     discogr = urllib.request.urlopen(artist_discography)
     discogr = discogr.read()    
     discography = json.loads(discogr)
+
+    if description is None:
+        raise ValueError
+
     result = parse_info(description, discography, fields, album_fields)
 
     return result
@@ -78,12 +80,12 @@ def get_artist_info(artist, artist_description, artist_discography, fields, albu
 @app.route('/artist')
 @cache.cached(timeout=120, query_string=True)
 def get_artist():
-
+    
     artist = request.args.get('name')
     try:
         response = get_artist_info(artist, ARTIST_DESCRIPTION, ARTIST_DISCOGRAPHY, FIELDS, ALBUM_FIELDS)
     except ValueError:
-        return jsonify({'errorCode' : 404, 'message' : 'Route not found'})
+        return make_response(jsonify({'message' : 'Route not found'}), 404)
 
     return jsonify(response)
 
