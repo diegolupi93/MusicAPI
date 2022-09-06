@@ -1,3 +1,4 @@
+from re import A
 from flask import Flask, request, jsonify, make_response
 import urllib.request, json
 from flask_caching import Cache 
@@ -73,12 +74,13 @@ def get_artist_info(artist, artist_description, artist_discography, fields, albu
 
     return result
 
-@app.errorhandler(404)
 @app.route('/artist')
 @cache.cached(timeout=120, query_string=True)
 def get_artist():
     
-    artist = request.args.get('name')
+    artist = request.args.get('name', None)
+    if artist is None:
+        return make_response(jsonify({'message' : 'Route not found'}), 404)
     try:
         response = get_artist_info(artist, ARTIST_DESCRIPTION, ARTIST_DISCOGRAPHY, FIELDS, ALBUM_FIELDS)
     except ValueError:
