@@ -4,10 +4,7 @@ from flask_caching import Cache
 from constants import ARTIST_DESCRIPTION, ARTIST_DISCOGRAPHY, FIELDS, ALBUM_FIELDS
 
 app = Flask(__name__)
-try:
-    app.config.from_object('config.Config')  # Set the configuration variables to the flask application
-except:
-    pass # To Run the test
+app.config.from_object('config.Config')  # Set the configuration variables to the flask application
 cache = Cache(app)  # Initialize Cache
 
 def parse_info(description, discography, fields, album_fields):
