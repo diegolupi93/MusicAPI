@@ -9,7 +9,7 @@ into the terminal following command is to run the code:
 ### Test Manually
 To Test the app Run the code after that go to **localhost:5000** and try, for example:
 
-[http://localhost:5000/artist?name=Madonna](http://localhost:5000/artist?name=Madonna)
+[http://localhost:5000/artist?name=coldplay](http://localhost:5000/artist?name=coldplay)
 
 ### Run the test
 To run the code you must have installed virtualenv. Run 
